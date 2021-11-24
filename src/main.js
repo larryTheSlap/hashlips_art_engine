@@ -32,6 +32,7 @@ const DNA_DELIMITER = "-";
 const HashlipsGiffer = require(`${basePath}/modules/HashlipsGiffer.js`);
 
 let hashlipsGiffer = null;
+let pad = '000'
 
 const buildSetup = () => {
   if (fs.existsSync(buildDir)) {
@@ -128,15 +129,11 @@ const drawBackground = () => {
 const addMetadata = (_dna, _edition) => {
   let dateTime = Date.now();
   let tempMetadata = {
-    name: `${namePrefix} #${_edition}`,
-    description: description,
-    image: `${baseUri}/${_edition}.png`,
-    dna: sha1(_dna),
-    edition: _edition,
-    date: dateTime,
-    ...extraMetadata,
-    attributes: attributesList,
-    compiler: "HashLips Art Engine",
+    id: 1,
+    CollectionName: 'Pharaonic civilisation',
+    CollectionImange: `https://github.com`,
+    description: 'description',
+    nfts: attributesList
   };
   if (network == NETWORK.sol) {
     tempMetadata = {
@@ -170,9 +167,13 @@ const addMetadata = (_dna, _edition) => {
 
 const addAttributes = (_element) => {
   let selectedElement = _element.layer.selectedElement;
+  var nft_id = "" + selectedElement.id
   attributesList.push({
-    trait_type: _element.layer.name,
-    value: selectedElement.name,
+    id: selectedElement.id,
+    collectionName: "Pharaonic civilisation",
+    nftid: `#${pad.substring(0, pad.length - nft_id) + nft_id}`,
+    imageUrl: "https://github.com",
+    price: 0,
   });
 };
 
