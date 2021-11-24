@@ -26,13 +26,13 @@ const canvas = createCanvas(format.width, format.height);
 const ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = format.smoothing;
 var metadataList = [];
+var formatedmetadataList = [];
 var attributesList = [];
 var dnaList = new Set();
 const DNA_DELIMITER = "-";
 const HashlipsGiffer = require(`${basePath}/modules/HashlipsGiffer.js`);
 
 let hashlipsGiffer = null;
-let pad = '000'
 
 const buildSetup = () => {
   if (fs.existsSync(buildDir)) {
@@ -128,12 +128,26 @@ const drawBackground = () => {
 
 const addMetadata = (_dna, _edition) => {
   let dateTime = Date.now();
+  var pad = '000'
+  var nft_name = "" + _edition
+  var rnd_id = Math.floor(Math.random() * 899999 + 100000)
+  let nft_attr = {
+    id: _edition,
+    collectionName: "Indigenous civilisation",
+    name: `#${pad.substring(0, pad.length - nft_name.length) + nft_name}`,
+    nftid: `${rnd_id}`,
+    imageUrl: `https://raw.githubusercontent.com/antiqua-bsc/antiqua_nfts/master/Indigenous/${_edition}.png`,
+    price: 0,
+  }
   let tempMetadata = {
-    id: 1,
-    CollectionName: 'Pharaonic civilisation',
-    CollectionImange: `https://github.com`,
+    name: `Pharaonic #${_edition}`,
+    edition: _edition,    
+    collectionName: 'Indigenous civilisation',
+    collectionImage: `https://github.com`,
+    ...extraMetadata,
     description: 'description',
-    nfts: attributesList
+    nfts: nft_attr
+  
   };
   if (network == NETWORK.sol) {
     tempMetadata = {
@@ -162,19 +176,23 @@ const addMetadata = (_dna, _edition) => {
     };
   }
   metadataList.push(tempMetadata);
+  formatedmetadataList.push(nft_attr);
   attributesList = [];
 };
 
 const addAttributes = (_element) => {
+  /*
   let selectedElement = _element.layer.selectedElement;
-  var nft_id = "" + selectedElement.id
+  var nft_name = "" + selectedElement.id
+  var nft_id =
   attributesList.push({
     id: selectedElement.id,
     collectionName: "Pharaonic civilisation",
-    nftid: `#${pad.substring(0, pad.length - nft_id) + nft_id}`,
+    name: `#${pad.substring(0, pad.length - nft_name) + nft_name}`,
+    nftid: `1`,
     imageUrl: "https://github.com",
     price: 0,
-  });
+  });*/
 };
 
 const loadLayerImg = async (_layer) => {
@@ -421,6 +439,7 @@ const startCreating = async () => {
     layerConfigIndex++;
   }
   writeMetaData(JSON.stringify(metadataList, null, 2));
+  writeMetaData(JSON.stringify(formatedmetadataList, null, 2));
 };
 
 module.exports = { startCreating, buildSetup, getElements };
